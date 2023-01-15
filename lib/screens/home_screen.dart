@@ -48,6 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void onResetPressed() {
+    timer.cancel();
+    setState(() {
+      isRunning = false;
+      totalSeconds = twentyFiveMinutes;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,18 +80,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               )),
           Flexible(
-            flex: 3,
-            child: Center(
-              child: IconButton(
-                iconSize: 120,
-                color: Theme.of(context).cardColor,
-                onPressed: isRunning ? onPausePressed : onStartPressed,
-                icon: Icon(isRunning
-                    ? Icons.pause_circle_outline
-                    : Icons.play_circle_outline),
-              ),
-            ),
-          ),
+              flex: 3,
+              child: Transform.translate(
+                  offset: const Offset(0, 70),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          iconSize: 120,
+                          color: Theme.of(context).cardColor,
+                          onPressed:
+                              isRunning ? onPausePressed : onStartPressed,
+                          icon: Icon(isRunning
+                              ? Icons.pause_circle_outline
+                              : Icons.play_circle_outline),
+                        ),
+                        IconButton(
+                          iconSize: 25,
+                          color: Theme.of(context).cardColor,
+                          onPressed: onResetPressed,
+                          icon: const Icon(Icons.autorenew),
+                        ),
+                      ]))),
           Flexible(
               flex: 1,
               child: Row(
