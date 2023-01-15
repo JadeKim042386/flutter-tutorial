@@ -32,10 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void onStartPressed() {
-    timer = Timer.periodic(
-      const Duration(seconds: 1),
-      onTick,
-    );
+    if (!isRunning) {
+      timer = Timer.periodic(
+        const Duration(seconds: 1),
+        onTick,
+      );
+    }
     setState(() {
       isRunning = true;
     });
@@ -48,11 +50,17 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void onResetPressed() {
+  void onTimeResetPressed() {
     timer.cancel();
     setState(() {
       isRunning = false;
       totalSeconds = twentyFiveMinutes;
+    });
+  }
+
+  void onPomoResetPressed() {
+    setState(() {
+      totalPomodoros = 0;
     });
   }
 
@@ -65,43 +73,45 @@ class _HomeScreenState extends State<HomeScreen> {
           Flexible(
               flex: 1,
               child: Transform.translate(
-                offset: const Offset(0, 50),
+                offset: const Offset(25, 20),
                 child: Container(
                   alignment: Alignment.bottomCenter,
-                  child: Text(
-                    totalSeconds >= 60 * 60
-                        ? '${(totalSeconds ~/ (60 * 60)).toString().padLeft(2, '0')}:${((totalSeconds % (60 * 60)) ~/ 60).toString().padLeft(2, '0')}:${((totalSeconds % (60 * 60)) % 60).toString().padLeft(2, '0')}'
-                        : '${(totalSeconds ~/ 60).toString().padLeft(2, '0')}:${(totalSeconds % 60).toString().padLeft(2, '0')}',
-                    style: TextStyle(
-                        color: Theme.of(context).cardColor,
-                        fontSize: 89,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-              )),
-          Flexible(
-              flex: 3,
-              child: Transform.translate(
-                  offset: const Offset(0, 70),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        IconButton(
-                          iconSize: 120,
-                          color: Theme.of(context).cardColor,
-                          onPressed:
-                              isRunning ? onPausePressed : onStartPressed,
-                          icon: Icon(isRunning
-                              ? Icons.pause_circle_outline
-                              : Icons.play_circle_outline),
+                        Text(
+                          totalSeconds >= 60 * 60
+                              ? '${(totalSeconds ~/ (60 * 60)).toString().padLeft(2, '0')}:${((totalSeconds % (60 * 60)) ~/ 60).toString().padLeft(2, '0')}:${((totalSeconds % (60 * 60)) % 60).toString().padLeft(2, '0')}'
+                              : '${(totalSeconds ~/ 60).toString().padLeft(2, '0')}:${(totalSeconds % 60).toString().padLeft(2, '0')}',
+                          style: TextStyle(
+                              color: Theme.of(context).cardColor,
+                              fontSize: 89,
+                              fontWeight: FontWeight.w600),
                         ),
                         IconButton(
                           iconSize: 25,
                           color: Theme.of(context).cardColor,
-                          onPressed: onResetPressed,
+                          onPressed: onTimeResetPressed,
                           icon: const Icon(Icons.autorenew),
-                        ),
-                      ]))),
+                        )
+                      ]),
+                ),
+              )),
+          Flexible(
+              flex: 2,
+              child: Transform.translate(
+                  offset: const Offset(0, 50),
+                  child: Column(children: [
+                    IconButton(
+                      iconSize: 120,
+                      color: Theme.of(context).cardColor,
+                      onPressed: isRunning ? onPausePressed : onStartPressed,
+                      icon: Icon(isRunning
+                          ? Icons.pause_circle_outline
+                          : Icons.play_circle_outline),
+                    )
+                  ]))),
           Flexible(
               flex: 1,
               child: Row(
@@ -113,8 +123,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                iconSize: 20,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline1!
+                                    .color,
+                                onPressed: onPomoResetPressed,
+                                icon: const Icon(Icons.autorenew),
+                              ),
+                            ],
+                          ),
                           Text('Pomodoros',
                               style: TextStyle(
                                 fontSize: 20,
