@@ -31,10 +31,36 @@ class HomeScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   var webtoon = snapshot.data![index];
-                  return Text(webtoon.title);
+                  return Column(
+                    children: [
+                      Container(
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 15,
+                                offset: const Offset(10, 10),
+                                color: Colors.black.withOpacity(0.3),
+                              )
+                            ]),
+                        width: 250,
+                        child: Image.network(webtoon.thumb),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        webtoon.title,
+                        style: const TextStyle(
+                          fontSize: 22,
+                        ),
+                      )
+                    ],
+                  );
                 },
                 separatorBuilder: (context, index) => const SizedBox(
-                  width: 20,
+                  width: 40,
                 ),
                 itemCount: snapshot.data!.length,
               );
